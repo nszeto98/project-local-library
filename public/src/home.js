@@ -34,10 +34,13 @@ function getMostCommonGenres(books) {
       "count" : value
     })
   }
-  result.sort((genreA, genreB) => genreB.count - genreA.count) 
-  return result.slice(0,5)
+    result.sort((genreA, genreB) => genreB.count - genreA.count) 
+    return result.slice(0,5)
 }
 
+// create new array that counts how many times a book was checked out
+// use book.borrows.length to count and set that number to a new object with "count" as the key
+// use helper function to sort and slice
 function getMostPopularBooks(books) {
   let mostPop = books.map((book) => {
     return {
@@ -45,12 +48,13 @@ function getMostPopularBooks(books) {
       "count": book.borrows.length
     }
   })
-  mostPop.sort((bookA, bookB) => bookA.count < bookB.count ? 1 : -1)
-  return mostPop.slice(0,5)
+  return helper(mostPop)
 }
 
 // determine how many times each book has been checked out
-// 
+// add all different books from each author and book.borrows.length for each
+// create new array of objects that each has a name and count key of each author and how many times their books have been borrowed
+// use helper function to sort and slice
 function getMostPopularAuthors(books, authors) {
   let result = [];
   authors.forEach((author) => {
@@ -65,9 +69,12 @@ function getMostPopularAuthors(books, authors) {
     })
     result.push(currentAuthor)
   })
-  result.sort((authorA, authorB) => authorA.count > authorB.count ? -1 : 1)
-  return result.slice(0,5)
+  return helper(result)
 }
+
+// HELPER function that sorts in descending order
+// also slices to only include highest 5 entries and removes the rest if there are more
+let helper = input => input.sort((first, second) => first.count > second.count ? -1 : 1).slice(0,5)
 
 module.exports = {
   getTotalBooksCount,
