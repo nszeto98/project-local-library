@@ -17,30 +17,28 @@ function getBooksBorrowedCount(books) {
   return borrowedBooks.length
 }
 
-// will need .sort() in descening order by # of times that genre appears in the books array
-// create new object listing the name and count of the books
-// 5 or fewer objects using .slice(0,5)
+// use .reduce to find how many times a book genre appears
+// create new var to hold current genre to not repeat ourselves
+// check if the current genre is already in the accumulator or not, and add a new entry if not.  add count++ if the genre already exists
+// helper function to sort and slice down to 5 list items
 function getMostCommonGenres(books) {
-  let count = {}
-  let result = []
-  books.forEach((book) => {
-    if (count[book.genre] != null) {
-      count[book.genre]++
-    } else count[book.genre] = 1
-  })
-  for (const [key, value] of Object.entries(count)) {
-    result.push({
-      "name" : key,
-      "count" : value
-    })
-  }
-    result.sort((genreA, genreB) => genreB.count - genreA.count) 
-    return result.slice(0,5)
+  const ans = books.reduce((acc, book) => {
+    const genre = book.genre
+    const genreInfo = acc.find((item) => item.name === genre);
+    if(!genreInfo) {
+      const newGenreInfo = {
+        name: genre,
+        count: 1
+      };
+      acc.push(newGenreInfo)
+    } else {
+    genreInfo.count++
+    }
+    return acc
+  }, []);
+ return helper(ans)
 }
-
-// create new array that counts how many times a book was checked out
-// use book.borrows.length to count and set that number to a new object with "count" as the key
-// use helper function to sort and slice
+  
 function getMostPopularBooks(books) {
   let mostPop = books.map((book) => {
     return {
@@ -52,9 +50,9 @@ function getMostPopularBooks(books) {
 }
 
 // determine how many times each book has been checked out
-// add all different books from each author and book.borrows.length for each
-// create new array of objects that each has a name and count key of each author and how many times their books have been borrowed
-// use helper function to sort and slice
+// use forEach to loop through authors and count how many times each of their books have been borrowed
+// create new function that returns author name and count of times their books have been borrowed
+// use helper function to reduce down to 5 list items
 function getMostPopularAuthors(books, authors) {
   let result = [];
   authors.forEach((author) => {
@@ -72,8 +70,7 @@ function getMostPopularAuthors(books, authors) {
   return helper(result)
 }
 
-// HELPER function that sorts in descending order
-// also slices to only include highest 5 entries and removes the rest if there are more
+// HELPER function that sorts and slices 
 let helper = input => input.sort((first, second) => first.count > second.count ? -1 : 1).slice(0,5)
 
 module.exports = {
